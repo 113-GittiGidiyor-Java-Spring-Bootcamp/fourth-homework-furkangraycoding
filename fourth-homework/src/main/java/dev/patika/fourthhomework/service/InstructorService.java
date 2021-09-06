@@ -1,5 +1,8 @@
 package dev.patika.fourthhomework.service;
 
+import dev.patika.fourthhomework.dto.InstructorDTO;
+import dev.patika.fourthhomework.exceptions.InstructorIsAlreadyExistException;
+import dev.patika.fourthhomework.mappers.InstructorMapper;
 import dev.patika.fourthhomework.model.Instructor;
 import dev.patika.fourthhomework.repository.InstructorRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,66 +14,79 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class InstructorService implements BaseService<Instructor> {
+public class InstructorService {
 
-    private final InstructorRepository repository;
+    private final InstructorRepository instructorRepository;
+    private final InstructorMapper instructorMapper;
 
-    @Override
+
     @Transactional(readOnly = true)
     public List<Instructor> findAll() {
         List<Instructor> insList = new ArrayList<>();
-        Iterable<Instructor> instructorIter = repository.findAll();
+        Iterable<Instructor> instructorIter = instructorRepository.findAll();
         instructorIter.iterator().forEachRemaining(insList::add);
         return insList;
     }
 
-    @Override
+
     @Transactional(readOnly = true)
     public Instructor findById(int id) {
-        return repository.findById(id).get();
+        return instructorRepository.findById(id).get();
     }
 
-    @Override
+
     @Transactional
-    public Instructor save(Instructor instructor) {
-        return repository.save(instructor);
+    public Instructor save(InstructorDTO instructordto) {
+
+        boolean isExist= instructorRepository.selectExistInstructor(instructordto.getPhoneNumber());
+
+
+        if(isExist){
+
+            throw new InstructorIsAlreadyExistException("Instructor with phoneNumber : " + instructordto.getPhoneNumber() + " is already exists!");}
+
+        Instructor instructor=instructorMapper.mapFromInstructorDTOtoInstructor(instructordto);
+        return instructorRepository.save(instructor);
     }
 
-    @Override
+
     @Transactional
-    public void delete(Instructor instructor) {
-        repository.delete(instructor);
+    public void delete(InstructorDTO instructordto) {
+        Instructor instructor=instructorMapper.mapFromInstructorDTOtoInstructor(instructordto);
+        instructorRepository.delete(instructor);
 
     }
 
-    @Override
+
     @Transactional
     public void deleteById(int id) {
-        repository.deleteById(id);
+        instructorRepository.deleteById(id);
 
     }
 
-    @Override
+
     @Transactional
-    public Instructor update(Instructor instructor) {
-        return repository.save(instructor);
+    public Instructor update(InstructorDTO instructordto) {
+        Instructor instructor=instructorMapper.mapFromInstructorDTOtoInstructor(instructordto);
+        return instructorRepository.save(instructor);
     }
 
-    @Override
+
     @Transactional
-    public void updateById(Instructor instructor, int id) {
+    public void updateById(InstructorDTO instructordto, int id) {
+        Instructor instructor=instructorMapper.mapFromInstructorDTOtoInstructor(instructordto);
         Instructor instructor1 = this.findById(id);
         instructor1.setAddress(instructor.getAddress());
         instructor1.setName(instructor.getName());
         instructor1.setPhoneNumber(instructor.getPhoneNumber());
         instructor1.setInstructorCoursesList(instructor.getInstructorCoursesList());
-        repository.save(instructor1);
+        instructorRepository.save(instructor1);
     }
 
     @Transactional(readOnly = true)
     public List<Instructor> getMaxSalary() {
 
-        List<Instructor>  result= repository.getMaxSalary();
+        List<Instructor>  result= instructorRepository.getMaxSalary();
 
         List<Instructor> out = new ArrayList<>();;
         for(int i = 0; i < 3; i++) {
@@ -81,7 +97,7 @@ public class InstructorService implements BaseService<Instructor> {
     @Transactional(readOnly = true)
     public List<Instructor> getMinSalary() {
 
-        List<Instructor>  result= repository.getMinSalary();
+        List<Instructor>  result= instructorRepository.getMinSalary();
 
         List<Instructor> out = new ArrayList<>();;
         for(int i = 0; i < 3; i++) {
@@ -93,7 +109,7 @@ public class InstructorService implements BaseService<Instructor> {
 
     @Transactional
     public void deleteAllByName(String name) {
-        repository.deleteAllByName(name);
+        instructorRepository.deleteAllByName(name);
     }
 
 
@@ -101,7 +117,7 @@ public class InstructorService implements BaseService<Instructor> {
     @Transactional(readOnly = true)
     public List<Instructor> findAllByName(String name) {
         List<Instructor> instructorList = new ArrayList<>();
-        Iterable<Instructor> instructorIter = repository.findAllByName(name);
+        Iterable<Instructor> instructorIter = instructorRepository.findAllByName(name);
         instructorIter.iterator().forEachRemaining(instructorList::add);
         return instructorList;
     }

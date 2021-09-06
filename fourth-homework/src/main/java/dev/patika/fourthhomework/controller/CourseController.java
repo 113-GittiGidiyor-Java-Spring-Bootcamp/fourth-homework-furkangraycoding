@@ -42,9 +42,9 @@ public class CourseController {
 
     }
     @DeleteMapping("/courses")
-    public void deleteCourse(@RequestBody Course course){
+    public void deleteCourse(@RequestBody CourseDTO courseDTO){
 
-        courseService.delete(course);
+        courseService.delete(courseDTO);
 
     }
 
@@ -55,13 +55,13 @@ public class CourseController {
     }
 
     @PutMapping("/courses")
-    public Course update(@RequestBody Course course){
-        return courseService.update(course);
+    public Course update(@RequestBody CourseDTO courseDTO){
+        return courseService.update(courseDTO);
     }
 
     @PutMapping("/courses/{id}")
-    public String updateById(@RequestBody Course course,@PathVariable int id){
-        courseService.updateById(course,id);
+    public String updateById(@RequestBody CourseDTO courseDTO,@PathVariable int id){
+        courseService.updateById(courseDTO,id);
         return "Updated...";
     }
 

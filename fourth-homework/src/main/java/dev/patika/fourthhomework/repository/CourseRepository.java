@@ -11,7 +11,6 @@ import java.util.List;
 public interface CourseRepository extends CrudRepository<Course, Integer> {
         List<Course> deleteByCourseName(String name);
         List<Course> findAllByCourseName(String name);
-
         @Query("SELECT " +
                 "  CASE " +
                 "   WHEN " +
@@ -22,6 +21,10 @@ public interface CourseRepository extends CrudRepository<Course, Integer> {
                 "       FALSE " +
                 "   END " +
                 "FROM Course c " +
-                "WHERE c.credit = ?1")
-        boolean selectExistCredit(int credit);
+                "WHERE c.courseCode = ?1")
+        boolean selectExistCourse(String courseCode);
+
+
+
+
 }

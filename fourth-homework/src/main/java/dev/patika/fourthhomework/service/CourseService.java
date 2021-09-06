@@ -2,11 +2,11 @@ package dev.patika.fourthhomework.service;
 
 
 import dev.patika.fourthhomework.dto.CourseDTO;
-import dev.patika.fourthhomework.exceptions.BadRequestException;
+import dev.patika.fourthhomework.exceptions.CourseIsAlreadyExistException;
+import dev.patika.fourthhomework.exceptions.StudentNumberForOneCourseExceededException;
 import dev.patika.fourthhomework.mappers.CourseMapper;
 import dev.patika.fourthhomework.model.Course;
 import dev.patika.fourthhomework.repository.CourseRepository;
-import javassist.tools.web.BadHttpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,11 +43,12 @@ public class CourseService {
     @Transactional
     public Course save(CourseDTO courseDTO) {
 
-        boolean isExist= courseRepository.selectExistCredit(courseDTO.getCredit());
+        boolean isExist= courseRepository.selectExistCourse(courseDTO.getCourseCode());
 
-        if (isExist){
-            throw new BadRequestException("Course with Credit:" + courseDTO.getCredit() +  " is already exist");
-        }
+        if(isExist){
+
+            throw new CourseIsAlreadyExistException("Course with CourseCode : " + courseDTO.getCourseCode() + " is already exists!");}
+
 
         Course course=courseMapper.mapFromCourseDTOtoCourse(courseDTO);
 
@@ -57,7 +58,8 @@ public class CourseService {
 
 
     @Transactional
-    public void delete(Course course) {
+    public void delete(CourseDTO courseDTO) {
+        Course course=courseMapper.mapFromCourseDTOtoCourse(courseDTO);
         courseRepository.delete(course);
 
     }
@@ -71,13 +73,20 @@ public class CourseService {
 
 
     @Transactional
-    public Course update(Course course) {
+    public Course update(CourseDTO courseDTO) {
+        if(courseDTO.getStudentList().size()>20){
+
+            throw new StudentNumberForOneCourseExceededException("Course reaches its limit : " + courseDTO.getStudentList().size() + " is already exists!");}
+
+
+        Course course=courseMapper.mapFromCourseDTOtoCourse(courseDTO);
         return courseRepository.save(course);
     }
 
 
     @Transactional
-    public void updateById(Course course, int id) {
+    public void updateById(CourseDTO courseDTO, int id) {
+        Course course=courseMapper.mapFromCourseDTOtoCourse(courseDTO);
         Course course1 = this.findById(id);
         course1.setCourseCode(course.getCourseCode());
         course1.setCourseName(course.getCourseName());

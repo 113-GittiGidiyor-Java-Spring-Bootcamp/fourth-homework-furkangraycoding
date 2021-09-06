@@ -18,4 +18,16 @@ public interface InstructorRepository extends CrudRepository<Instructor, Integer
 
     List<Instructor> deleteAllByName(String name);
     List<Instructor> findAllByName(String name);
+    @Query("SELECT " +
+            "  CASE " +
+            "   WHEN " +
+            "       COUNT(i)>0 " +
+            "   THEN " +
+            "       TRUE " +
+            "   ELSE " +
+            "       FALSE " +
+            "   END " +
+            "FROM Instructor i " +
+            "WHERE i.phoneNumber = ?1")
+    boolean selectExistInstructor(int phoneNumber);
 }

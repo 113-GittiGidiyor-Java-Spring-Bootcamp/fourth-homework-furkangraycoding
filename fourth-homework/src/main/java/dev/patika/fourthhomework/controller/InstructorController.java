@@ -1,6 +1,7 @@
 package dev.patika.fourthhomework.controller;
 
 
+import dev.patika.fourthhomework.dto.InstructorDTO;
 import dev.patika.fourthhomework.model.Instructor;
 import dev.patika.fourthhomework.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +35,15 @@ public class InstructorController {
     }
 
     @PostMapping("/instructors")
-    public Instructor saveInstructor(@RequestBody Instructor instructor){
+    public Instructor saveInstructor(@RequestBody InstructorDTO instructordto){
 
-        return instructorService.save(instructor);
+        return instructorService.save(instructordto);
 
     }
     @DeleteMapping("/instructors")
-    public void deleteInstructor(@RequestBody Instructor instructor){
+    public void deleteInstructor(@RequestBody InstructorDTO instructordto){
 
-        instructorService.delete(instructor);
+        instructorService.delete(instructordto);
 
     }
 
@@ -53,13 +54,13 @@ public class InstructorController {
     }
 
     @PutMapping("/instructors")
-    public Instructor update(@RequestBody Instructor instructor){
-        return instructorService.update(instructor);
+    public Instructor update(@RequestBody InstructorDTO instructordto){
+        return instructorService.update(instructordto);
     }
 
     @PutMapping("/instructors/{id}")
-    public String updateById(@RequestBody Instructor instructor,@PathVariable int id){
-        instructorService.updateById(instructor,id);
+    public String updateById(@RequestBody InstructorDTO instructordto,@PathVariable int id){
+        instructorService.updateById(instructordto,id);
         return "Updated...";
     }
 

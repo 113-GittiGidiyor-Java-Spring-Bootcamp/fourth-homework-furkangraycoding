@@ -19,8 +19,8 @@ public class StudentDTO{
     private int id;
     @ApiModelProperty(example = "Ogrencı")
     private String name;
-    @ApiModelProperty(example = "20-02-1980")
-    private String birthDate;
+    @ApiModelProperty(example = "1980")
+    private int birthDate;
     @ApiModelProperty(example = "Ogrenci adres")
     private String address;
     @ApiModelProperty(example = "male")

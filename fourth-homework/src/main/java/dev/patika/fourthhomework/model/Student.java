@@ -16,7 +16,7 @@ import java.util.List;
 public class Student extends AbstractBaseEntity{
 
     private String name;
-    private String birthDate;
+    private int birthDate;
     private String address;
     private String gender;
 

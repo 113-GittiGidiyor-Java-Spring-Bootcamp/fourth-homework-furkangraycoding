@@ -18,4 +18,8 @@ public interface StudentRepository extends CrudRepository<Student, Integer> {
     List<?> getStudentGender();
 
 
+
+
+
+
 }

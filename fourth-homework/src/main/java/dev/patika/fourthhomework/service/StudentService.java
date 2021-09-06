@@ -1,91 +1,125 @@
 package dev.patika.fourthhomework.service;
 
 
+import dev.patika.fourthhomework.dto.StudentDTO;
+import dev.patika.fourthhomework.exceptions.StudentAgeNotValidException;
+import dev.patika.fourthhomework.mappers.StudentMapper;
+import dev.patika.fourthhomework.model.Logger;
 import dev.patika.fourthhomework.model.Student;
+import dev.patika.fourthhomework.repository.LoggerRepository;
 import dev.patika.fourthhomework.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class StudentService implements BaseService<Student> {
+public class StudentService {
 
 
-    private final StudentRepository repository;
+    private final StudentRepository studentRepository;
+    private final LoggerRepository loggerRepository;
+    private final StudentMapper studentMapper;
 
-    @Override
+
     @Transactional(readOnly = true)
     public List<Student> findAll() {
         List<Student> stuList = new ArrayList<>();
-        Iterable<Student> studentIter = repository.findAll();
+        Iterable<Student> studentIter = studentRepository.findAll();
         studentIter.iterator().forEachRemaining(stuList::add);
         return stuList;
     }
 
-    @Override
+
     @Transactional(readOnly = true)
     public Student findById(int id) {
-        return repository.findById(id).get();
+        return studentRepository.findById(id).get();
     }
 
-    @Override
+
     @Transactional
-    public Student save(Student student) {
-        return repository.save(student);
+    public Student save(StudentDTO studentDTO) {
+        int year = Year.now().getValue();;
+        boolean isExist =true;
+        int dif=Math.abs(studentDTO.getBirthDate() - year);
+        if ( dif>=18 &&	dif<=40 ){
+            isExist=false;
+        }
+
+
+        String Error_mesage= " ";
+        if(isExist){
+            Error_mesage="Student birthdate cant accepted : " + studentDTO.getBirthDate();
+
+            Logger log = new Logger(LocalDate.now(), Error_mesage);
+            loggerRepository.save(log);
+
+            throw new StudentAgeNotValidException(Error_mesage);}
+
+
+
+
+
+        Student student=studentMapper.mapFromStudentDTOtoStudent((studentDTO));
+        return studentRepository.save(student);
     }
 
-    @Override
+
     @Transactional
-    public void delete(Student student) {
-        repository.delete(student);
+    public void delete(StudentDTO studentDTO) {
+        Student student=studentMapper.mapFromStudentDTOtoStudent((studentDTO));
+        studentRepository.delete(student);
 
     }
 
-    @Override
+
     @Transactional
     public void deleteById(int id) {
-        repository.deleteById(id);
+        studentRepository.deleteById(id);
 
     }
 
-    @Override
+
     @Transactional
-    public Student update(Student student) {
-        return repository.save(student);
+    public Student update(StudentDTO studentDTO) {
+        Student student=studentMapper.mapFromStudentDTOtoStudent((studentDTO));
+        return studentRepository.save(student);
     }
 
-    @Override
+
     @Transactional
-    public void updateById(Student student, int id) {
+    public void updateById(StudentDTO studentDTO, int id) {
+        Student student=studentMapper.mapFromStudentDTOtoStudent((studentDTO));
         Student student1 = this.findById(id);
         student1.setAddress(student.getAddress());
         student1.setName(student.getName());
         student1.setBirthDate(student.getBirthDate());
         student1.setGender(student.getGender());
-        repository.save(student1);
+        studentRepository.save(student1);
     }
 
 
     @Transactional(readOnly = true)
     public List<?> getStudentGender(){
 
-        return repository.getStudentGender();
+        return studentRepository.getStudentGender();
     }
 
     @Transactional
     public void deleteAllByName(String name){
-        repository.deleteAllByName(name);
+        studentRepository.deleteAllByName(name);
 
     }
 
     @Transactional(readOnly = true)
     public List<Student> findAllByName(String name) {
         List<Student> studentList = new ArrayList<>();
-        Iterable<Student> studentIter = repository.findAllByName(name);
+        Iterable<Student> studentIter = studentRepository.findAllByName(name);
         studentIter.iterator().forEachRemaining(studentList::add);
         return studentList;
     }

@@ -1,6 +1,8 @@
 package dev.patika.fourthhomework.controller;
 
 
+import dev.patika.fourthhomework.dto.CourseDTO;
+import dev.patika.fourthhomework.dto.StudentDTO;
 import dev.patika.fourthhomework.model.Student;
 import dev.patika.fourthhomework.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +36,15 @@ public class StudentController {
     }
 
     @PostMapping("/students")
-    public Student saveStudent(@RequestBody Student student){
+    public Student saveStudent(@RequestBody StudentDTO studentDTO){
 
-        return studentService.save(student);
+        return studentService.save(studentDTO);
 
     }
     @DeleteMapping("/students")
-    public void deleteStudent(@RequestBody Student student){
+    public void deleteStudent(@RequestBody StudentDTO studentDTO){
 
-        studentService.delete(student);
+        studentService.delete(studentDTO);
 
     }
 
@@ -53,13 +55,13 @@ public class StudentController {
     }
 
     @PutMapping("/students")
-    public Student update(@RequestBody Student student){
-        return studentService.update(student);
+    public Student update(@RequestBody StudentDTO studentDTO){
+        return studentService.update(studentDTO);
     }
 
     @PutMapping("/students/{id}")
-    public String updateById(@RequestBody Student student, @PathVariable int id){
-        studentService.updateById(student,id);
+    public String updateById(@RequestBody StudentDTO studentDTO, @PathVariable int id){
+        studentService.updateById(studentDTO,id);
         return "Updated...";
     }
 
