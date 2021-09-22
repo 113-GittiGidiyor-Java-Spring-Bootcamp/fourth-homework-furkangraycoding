@@ -1,13 +1,10 @@
 package dev.patika.fourthhomework.dto;
 
-import dev.patika.fourthhomework.model.AbstractBaseEntity;
 import dev.patika.fourthhomework.model.Course;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 

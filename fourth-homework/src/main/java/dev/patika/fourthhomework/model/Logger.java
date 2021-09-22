@@ -9,13 +9,17 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Logger extends AbstractBaseEntity {
 
-    private LocalDate throwDate;
-    private String throwMessage;
+    private Integer status;
+
+    private String message;
+
+    private LocalDate date;
 
 }

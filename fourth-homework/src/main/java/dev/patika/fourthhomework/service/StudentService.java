@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -44,26 +45,10 @@ public class StudentService {
 
     @Transactional
     public Student save(StudentDTO studentDTO) {
-        int year = Year.now().getValue();;
-        boolean isExist =true;
+        int year = Year.now().getValue();
         int dif=Math.abs(studentDTO.getBirthDate() - year);
-        if ( dif>=18 &&	dif<=40 ){
-            isExist=false;
-        }
-
-
-        String Error_mesage= " ";
-        if(isExist){
-            Error_mesage="Student birthdate cant accepted : " + studentDTO.getBirthDate();
-
-            Logger log = new Logger(LocalDate.now(), Error_mesage);
-            loggerRepository.save(log);
-
-            throw new StudentAgeNotValidException(Error_mesage);}
-
-
-
-
+        if ( dif<=18 ||	dif>=40 ){
+            throw new StudentAgeNotValidException("Student age is not between 18 and 40!!!");}
 
         Student student=studentMapper.mapFromStudentDTOtoStudent((studentDTO));
         return studentRepository.save(student);

@@ -39,11 +39,8 @@ public class InstructorService {
     public Instructor save(InstructorDTO instructordto) {
 
         boolean isExist= instructorRepository.selectExistInstructor(instructordto.getPhoneNumber());
-
-
         if(isExist){
-
-            throw new InstructorIsAlreadyExistException("Instructor with phoneNumber : " + instructordto.getPhoneNumber() + " is already exists!");}
+            throw new InstructorIsAlreadyExistException("Instructor Is Already Exist With Same Phone Number!");}
 
         Instructor instructor=instructorMapper.mapFromInstructorDTOtoInstructor(instructordto);
         return instructorRepository.save(instructor);

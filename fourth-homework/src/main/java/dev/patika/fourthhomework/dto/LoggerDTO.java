@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -16,8 +17,10 @@ import java.time.LocalDate;
 
 public class LoggerDTO {
     @ApiModelProperty(hidden = true)
-    private int id;
+    private long id;
+
     private LocalDate throwDate;
     private String throwMessage;
+    private int throwStatusCode;
 
 }

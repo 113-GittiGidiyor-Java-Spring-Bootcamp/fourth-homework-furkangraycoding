@@ -76,8 +76,7 @@ public class CourseService {
     public Course update(CourseDTO courseDTO) {
         if(courseDTO.getStudentList().size()>20){
 
-            throw new StudentNumberForOneCourseExceededException("Course reaches its limit : " + courseDTO.getStudentList().size() + " is already exists!");}
-
+            throw new StudentNumberForOneCourseExceededException("This course is limited to 20 people!");}
 
         Course course=courseMapper.mapFromCourseDTOtoCourse(courseDTO);
         return courseRepository.save(course);
